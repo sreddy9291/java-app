@@ -11,12 +11,5 @@ pipeline {
                     url: 'https://github.com/sreddy9291/java-application.git'
         } 
       }
-      
-  stage('Build the code') {
-            steps {
-                sh 'mvn clean install'
-                
-            }
-        }  
     }
-    }
+}
