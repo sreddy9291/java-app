@@ -15,19 +15,8 @@ pipeline {
   stage('Build the code') {
             steps {
                 sh 'mvn clean install'
-            }
-        }    
-      
-   stage('Build Docker Image') {
-            steps {
-                sh '''
-              docker build . --tag web-application:$BUILD_NUMBER
-              docker tag web-application:$BUILD_NUMBER 024358826974.dkr.ecr.us-east-1.amazonaws.com/web-application:$BUILD_NUMBER
-                
-                '''
                 
             }
         }  
-      
     }
-}
+    }
