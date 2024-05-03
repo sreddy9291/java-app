@@ -1,14 +1,14 @@
-name: Maven Build and Upload Artifact
+name: Maven Build and Deploy
 
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -20,11 +20,21 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Maven
-        run: |
-          mvn clean install
+        run: mvn clean install
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.4
         with:
-          name: my-artifact
-          path: target/*.war
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Copy WAR to Windows Server
+        run: |
+          scp -i $SSH_PRIVATE_KEY target/*.war Administrator@172.31.16.188:/C/Users/Administrator/Desktop/artifacts/
